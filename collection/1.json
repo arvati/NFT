@@ -1,0 +1,8 @@
+{
+    "name": "NFT 1",
+    "description": "NFT 1 publicado na Mumbai Polygon",
+    "image": "https://arvati.github.io/NFT/image/1.png",
+    "external_link": "https://arvati.github.io/NFT/page/1.html",
+    "seller_fee_basis_points": 100,
+    "fee_recipient": "0xff2416aC6D95ee66fa095453531970291a3651a6"
+  }
