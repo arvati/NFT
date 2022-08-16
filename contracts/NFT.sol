@@ -30,4 +30,11 @@ contract NFT is ERC721URIStorage, Ownable {
 
         return newItemId;
     }
+
+    function contractURI() 
+        public pure 
+        returns (string memory) 
+    {
+        return "https://arvati.github.io/collection/1.json";
+    }
 }
