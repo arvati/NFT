@@ -1,0 +1,12 @@
+{
+    "description": "Descrição do NFT", 
+    "external_url": "https://arvati.github.io/NFT/page/1.html", 
+    "image": "https://arvati.github.io/NFT/image/1.png", 
+    "name": "Nome do NFT",
+    "attributes": [
+        {
+            "trait_type": "Author", 
+            "value": "Ademar Arvati Filho"
+          }
+     ] 
+  }
