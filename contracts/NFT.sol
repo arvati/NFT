@@ -13,6 +13,9 @@ contract NFT is ERC721URIStorage, Ownable {
     using Counters for Counters.Counter;
     Counters.Counter private _tokenIds;
 
+    // Constants
+    uint256 public constant TOTAL_SUPPLY = 10_000;
+
     constructor() ERC721(
         "NFT 1", 
         "NFT1"
@@ -22,6 +25,10 @@ contract NFT is ERC721URIStorage, Ownable {
         public onlyOwner
         returns (uint256)
     {
+
+        uint256 tokenId = _tokenIds.current();
+        require(tokenId < TOTAL_SUPPLY, "Max supply reached");
+
         _tokenIds.increment();
 
         uint256 newItemId = _tokenIds.current();
