@@ -8,11 +8,23 @@
             "trait_type": "Author", 
             "value": "Ademar Arvati Filho"
           },
-          {
-            "value": "Gratitude"
+          { 
+            "display_type": "boost_percentage",
+            "trait_type": "Gratitude", 
+            "value": 100
           },
           {
+            "trait_type": "Personality", 
             "value": "Happy"
+          }, 
+          {
+            "trait_type": "Base", 
+            "value": "Friend"
+          }, 
+          {
+            "display_type": "number", 
+            "trait_type": "Generation", 
+            "value": 48
           },
         {
             "display_type": "date", 
