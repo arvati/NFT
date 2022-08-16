@@ -1,12 +1,23 @@
 {
-    "description": "Descrição do NFT", 
+    "description": "NFT 1 publicado na Mumbai Polygon", 
     "external_url": "https://arvati.github.io/NFT/page/1.html", 
     "image": "https://arvati.github.io/NFT/image/1.png", 
-    "name": "Nome do NFT",
+    "name": "NFT 1 Mumbai",
     "attributes": [
         {
             "trait_type": "Author", 
             "value": "Ademar Arvati Filho"
+          },
+          {
+            "value": "Gratitude"
+          },
+          {
+            "value": "Happy"
+          }
+        {
+            "display_type": "date", 
+            "trait_type": "birthday", 
+            "value": 145854000
           }
      ] 
   }
