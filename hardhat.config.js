@@ -6,6 +6,10 @@ require("@nomiclabs/hardhat-ethers")
 
 require('dotenv').config();
 
+// Hardhat custom tasks
+require("./scripts/mint.js");
+require("./scripts/deploy.js");
+
 const { WALLET_PRIVATE_KEY, POLYGONSCAN_API_KEY, ETHERSCAN_API_KEY, INFURA_KEY, ALCHEMY_KEY } = process.env;
 
 module.exports = {
@@ -57,5 +61,15 @@ module.exports = {
         polygon: POLYGONSCAN_API_KEY,
         polygonMumbai: POLYGONSCAN_API_KEY
    }
-}
+  },
+  ledger: {
+    path: 1
+  },
+  nftContract: {
+    name: "NFT1",
+    networks: {
+      polygon: "",
+      polygonMumbai: "0xF2CFC900D2293c25e37Fad904d21BbF568E424DC"
+    }
+  }
 };

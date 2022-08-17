@@ -3,6 +3,7 @@ Mint de NFT 1
 
 ```shell
 npx hardhat compile
+npx hardhat deploy --network polygonMumbai
 npx hardhat run scripts/deploy.js --network polygonMumbai
 ```
 

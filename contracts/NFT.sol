@@ -1,47 +1,129 @@
-//Contract based on [https://docs.openzeppelin.com/contracts/3.x/erc721](https://docs.openzeppelin.com/contracts/3.x/erc721)
+//Contract based on [https://docs.openzeppelin.com/contracts/4.x/erc721](https://docs.openzeppelin.com/contracts/4.x/erc721)
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
+import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 
 import "hardhat/console.sol";
 
-contract NFT is ERC721URIStorage, Ownable {
+/// @custom:security-contact mazinho
+contract NFT1 is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
     using Counters for Counters.Counter;
-    Counters.Counter private _tokenIds;
+    using Strings for uint256;
 
-    // Constants
-    uint256 public constant TOTAL_SUPPLY = 10_000;
+    Counters.Counter private _tokenIdCounter;
 
-    constructor() ERC721(
-        "NFT 1", 
-        "NFT1"
-        ) {}
+    string public baseTokenURI;
+    string public tokenUriPrefix;
+    string public contractUriPrefix;
+    string public uriSuffix;
+    bool private _unique;
 
-    function mintNFT(address recipient, string memory tokenURI)
-        public onlyOwner
-        returns (uint256)
+    constructor() ERC721("NFT 1", "NFT1") 
     {
+        baseTokenURI = "https://arvati.github.io/NFT/";
+        tokenUriPrefix = "metadata/";
+        contractUriPrefix = "collection/";
+        uriSuffix = ".json";
+        _unique = false;
+    }
 
-        uint256 tokenId = _tokenIds.current();
-        require(tokenId < TOTAL_SUPPLY, "Max supply reached");
+    function _baseURI() internal view override returns (string memory) 
+    {
+        return baseTokenURI;
+    }
 
-        _tokenIds.increment();
+    function setBaseTokenURI(string memory _baseTokenURI) 
+        public onlyOwner
+    {
+        baseTokenURI = _baseTokenURI;
+    }
 
-        uint256 newItemId = _tokenIds.current();
-        _mint(recipient, newItemId);
-        _setTokenURI(newItemId, tokenURI);
+    function pause() 
+        public onlyOwner {
+        _pause();
+    }
 
-        return newItemId;
+    function unpause() 
+        public onlyOwner {
+        _unpause();
+    }
+
+    function safeMint(address to) 
+        public onlyOwner 
+    {
+        uint256 tokenId = _tokenIdCounter.current();
+        _tokenIdCounter.increment();
+        _safeMint(to, tokenId);
+    }
+
+    function _beforeTokenTransfer(address from, address to, uint256 tokenId)
+        internal whenNotPaused override(ERC721, ERC721Enumerable)
+    {
+        super._beforeTokenTransfer(from, to, tokenId);
+    }
+
+    // The following functions are overrides required by Solidity.
+
+    function supportsInterface(bytes4 interfaceId)
+        public view override(ERC721, ERC721Enumerable)
+        returns (bool)
+    {
+        return super.supportsInterface(interfaceId);
+    }
+
+    function setUnique(bool unique)
+        public onlyOwner 
+    {
+        _unique = unique;
+    }
+
+    function setUriSuffix(string memory _uriSuffix)
+        public onlyOwner 
+    {
+        uriSuffix = _uriSuffix;
+    }
+
+    function setContractUriPrefix(string memory _contractUriPrefix)
+        public onlyOwner 
+    {
+        contractUriPrefix = _contractUriPrefix;
+    }
+
+    function setTokenUriPrefix(string memory _tokenUriPrefix)
+        public onlyOwner 
+    {
+        tokenUriPrefix = _tokenUriPrefix;
     }
 
     function contractURI() 
-        public pure 
+        public view
         returns (string memory) 
     {
-        return "https://arvati.github.io/collection/1.json";
+        string memory baseURI = _baseURI();
+        string memory symbol = symbol();
+        return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, contractUriPrefix, symbol, uriSuffix)) : "";
     }
+
+    function tokenURI(uint256 tokenId)
+        public view override 
+        returns (string memory) 
+    {
+        _requireMinted(tokenId);
+        string memory baseURI = _baseURI();
+        string memory symbol = symbol();
+        if (_unique) {
+            return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, tokenUriPrefix, tokenId.toString(), uriSuffix)) : "";
+        }
+        else {
+            return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, tokenUriPrefix, symbol, uriSuffix)) : "";
+        }       
+    }
+
 }
