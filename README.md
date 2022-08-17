@@ -26,9 +26,62 @@ npx hardhat mint --network polygonMumbai
 ```
 
 ```
-NFT Minted! Check it out at: 
-https://mumbai.polygonscan.com/tx/0xa630edcf34e3a8ebf79e5141a9fa7706d1423d18b9d5eb5b6014bc486909f87f
+Network: polygonMumbai
+Using Ledger account: 0xff2416aC6D95ee66fa095453531970291a3651a6
+Using contract: NFT1
+Using contract address: 0x2E6185f3d231a82Db6060B9A5c47F22faf1c5272
+Minting to: 0xff2416aC6D95ee66fa095453531970291a3651a6
+Transaction Hash: 0x287540fff5964b15bc1d04997dad1ea7f6f48c2a1fa097e47950e0198c85683e
 ```
 
+https://mumbai.polygonscan.com/tx/0x287540fff5964b15bc1d04997dad1ea7f6f48c2a1fa097e47950e0198c85683e
+
 OpenSea Mumbai Testnet
-https://testnets.opensea.io/assets/mumbai/0xf2cfc900d2293c25e37fad904d21bbf568e424dc/1
+https://testnets.opensea.io/assets/mumbai/0x2E6185f3d231a82Db6060B9A5c47F22faf1c5272/0
+
+```shell
+npx hardhat token-uri --id 0 --network polygonMumbai
+```
+
+```
+Network: polygonMumbai
+Using Ledger account: 0xff2416aC6D95ee66fa095453531970291a3651a6
+Using contract: NFT1
+Using contract address: 0x2E6185f3d231a82Db6060B9A5c47F22faf1c5272
+Metadata URL: https://arvati.github.io/NFT/metadata/NFT1.json
+Metadata fetch response: {
+  "description": "NFT 1 publicado na Mumbai Polygon",
+  "external_url": "https://arvati.github.io/NFT/page/1.html",
+  "image": "https://arvati.github.io/NFT/image/1.png",
+  "name": "NFT 1 Mumbai",
+  "attributes": [
+    {
+      "trait_type": "Author",
+      "value": "Ademar Arvati Filho"
+    },
+    {
+      "display_type": "boost_percentage",
+      "trait_type": "Gratitude",
+      "value": 100
+    },
+    {
+      "trait_type": "Personality",
+      "value": "Happy"
+    },
+    {
+      "trait_type": "Base",
+      "value": "Friend"
+    },
+    {
+      "display_type": "number",
+      "trait_type": "Generation",
+      "value": 48
+    },
+    {
+      "display_type": "date",
+      "trait_type": "birthday",
+      "value": 145854000
+    }
+  ]
+}
+```
