@@ -4,24 +4,25 @@ Mint de NFT 1
 ```shell
 npx hardhat compile
 npx hardhat deploy --network polygonMumbai
-npx hardhat run scripts/deploy.js --network polygonMumbai
 ```
 
 ```
-Deploying contracts with the account:, 0xff2416aC6D95ee66fa095453531970291a3651a6
-Contract deployed to address: 0xF2CFC900D2293c25e37Fad904d21BbF568E424DC
-```
-
-```shell
-npx hardhat verify --network polygonMumbai 0xF2CFC900D2293c25e37Fad904d21BbF568E424DC --contract contracts/NFT.sol:NFT
-```
-
-```
-https://mumbai.polygonscan.com/address/0xF2CFC900D2293c25e37Fad904d21BbF568E424DC#code
+Network: polygonMumbai
+Using Ledger account: 0xff2416aC6D95ee66fa095453531970291a3651a6
+Using contract: NFT1
+Contract deployed to address: 0x2E6185f3d231a82Db6060B9A5c47F22faf1c5272
 ```
 
 ```shell
-npx hardhat run scripts/mint-nft.js --network polygonMumbai
+npx hardhat verify --network polygonMumbai 0x2E6185f3d231a82Db6060B9A5c47F22faf1c5272 --contract contracts/NFT.sol:NFT1
+```
+
+```
+https://mumbai.polygonscan.com/address/0x2E6185f3d231a82Db6060B9A5c47F22faf1c5272#code
+```
+
+```shell
+npx hardhat mint --network polygonMumbai
 ```
 
 ```

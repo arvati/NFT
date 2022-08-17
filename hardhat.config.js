@@ -69,7 +69,7 @@ module.exports = {
     name: "NFT1",
     networks: {
       polygon: "",
-      polygonMumbai: "0xF2CFC900D2293c25e37Fad904d21BbF568E424DC"
+      polygonMumbai: "0x2E6185f3d231a82Db6060B9A5c47F22faf1c5272"
     }
   }
 };

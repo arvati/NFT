@@ -19,30 +19,30 @@ contract NFT1 is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
 
     Counters.Counter private _tokenIdCounter;
 
-    string public baseTokenURI;
-    string public tokenUriPrefix;
-    string public contractUriPrefix;
-    string public uriSuffix;
+    string private _baseTokenURI;
+    string private _tokenUriPrefix;
+    string private _contractUriPrefix;
+    string private _uriSuffix;
     bool private _unique;
 
     constructor() ERC721("NFT 1", "NFT1") 
     {
-        baseTokenURI = "https://arvati.github.io/NFT/";
-        tokenUriPrefix = "metadata/";
-        contractUriPrefix = "collection/";
-        uriSuffix = ".json";
+        _baseTokenURI = "https://arvati.github.io/NFT/";
+        _tokenUriPrefix = "metadata/";
+        _contractUriPrefix = "collection/";
+        _uriSuffix = ".json";
         _unique = false;
     }
 
     function _baseURI() internal view override returns (string memory) 
     {
-        return baseTokenURI;
+        return _baseTokenURI;
     }
 
-    function setBaseTokenURI(string memory _baseTokenURI) 
+    function setBaseTokenURI(string memory baseTokenURI) 
         public onlyOwner
     {
-        baseTokenURI = _baseTokenURI;
+        _baseTokenURI = baseTokenURI;
     }
 
     function pause() 
@@ -84,22 +84,22 @@ contract NFT1 is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
         _unique = unique;
     }
 
-    function setUriSuffix(string memory _uriSuffix)
+    function setUriSuffix(string memory uriSuffix)
         public onlyOwner 
     {
-        uriSuffix = _uriSuffix;
+        _uriSuffix = uriSuffix;
     }
 
-    function setContractUriPrefix(string memory _contractUriPrefix)
+    function setContractUriPrefix(string memory contractUriPrefix)
         public onlyOwner 
     {
-        contractUriPrefix = _contractUriPrefix;
+        _contractUriPrefix = contractUriPrefix;
     }
 
-    function setTokenUriPrefix(string memory _tokenUriPrefix)
+    function setTokenUriPrefix(string memory tokenUriPrefix)
         public onlyOwner 
     {
-        tokenUriPrefix = _tokenUriPrefix;
+        _tokenUriPrefix = tokenUriPrefix;
     }
 
     function contractURI() 
@@ -108,7 +108,7 @@ contract NFT1 is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
     {
         string memory baseURI = _baseURI();
         string memory symbol = symbol();
-        return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, contractUriPrefix, symbol, uriSuffix)) : "";
+        return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, _contractUriPrefix, symbol, _uriSuffix)) : "";
     }
 
     function tokenURI(uint256 tokenId)
@@ -119,10 +119,10 @@ contract NFT1 is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
         string memory baseURI = _baseURI();
         string memory symbol = symbol();
         if (_unique) {
-            return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, tokenUriPrefix, tokenId.toString(), uriSuffix)) : "";
+            return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, _tokenUriPrefix, tokenId.toString(), _uriSuffix)) : "";
         }
         else {
-            return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, tokenUriPrefix, symbol, uriSuffix)) : "";
+            return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, _tokenUriPrefix, symbol, _uriSuffix)) : "";
         }       
     }
 
