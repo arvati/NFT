@@ -1,3 +1,4 @@
+const {addressess} = require("./multimint.js");
 
 const { getLedgerContract, getLedgerAccount, getAccount} = require("./helpers");
 //const {ethers} = require("hardhat");
@@ -11,9 +12,18 @@ task("mint", "Mints from the deployed smart contract")
 .setAction(async function (taskArguments, hre) {
     console.log(`Network: ${hre.network.name}`);
     const contract = await getLedgerContract(hre.config.nftContract.name, hre.config.nftContract.networks[hre.network.name], hre);
-    const recipientAddress = (taskArguments.address) ? "0x".concat(taskArguments.address) : await contract.owner();
+    const recipientAddress = (taskArguments.address) ? taskArguments.address : await contract.owner();
     console.log(`Minting to: ${recipientAddress}`);
     const transactionResponse = await contract.safeMint(recipientAddress);
+    console.log(`Transaction Hash: ${transactionResponse.hash}`);
+});
+
+task("multimint", "Multi Mint from the deployed smart contract")
+.setAction(async function (taskArguments, hre) {
+    console.log(`Network: ${hre.network.name}`);
+    const contract = await getLedgerContract(hre.config.nftContract.name, hre.config.nftContract.networks[hre.network.name], hre);
+    console.log(`Minting to: ${addressess}`);
+    const transactionResponse = await contract.multiMint(addressess);
     console.log(`Transaction Hash: ${transactionResponse.hash}`);
 });
 

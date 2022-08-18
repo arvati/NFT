@@ -13,7 +13,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "hardhat/console.sol";
 
 /// @custom:security-contact mazinho
-contract NFT1 is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
+contract NFT1a is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
     using Counters for Counters.Counter;
     using Strings for uint256;
 
@@ -25,9 +25,9 @@ contract NFT1 is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
     string private _uriSuffix;
     bool private _unique;
 
-    constructor() ERC721("NFT 1", "NFT1") 
+    constructor() ERC721("NFT 1a", "NFT1a") 
     {
-        _baseTokenURI = "https://arvati.github.io/NFT/";
+        _baseTokenURI = "https://corp.eng.br/NFT/";
         _tokenUriPrefix = "metadata/";
         _contractUriPrefix = "collection/";
         _uriSuffix = ".json";
@@ -61,6 +61,16 @@ contract NFT1 is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
+    }
+
+    function multiMint(address[] memory tos)
+        public onlyOwner 
+    {
+        uint i=0;
+        for(i;i<tos.length;i++)
+        {
+            safeMint(tos[i]);
+        }
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId)

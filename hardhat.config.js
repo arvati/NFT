@@ -66,10 +66,10 @@ module.exports = {
     path: 1
   },
   nftContract: {
-    name: "NFT1",
+    name: "NFT1a",
     networks: {
       polygon: "",
-      polygonMumbai: "0x2E6185f3d231a82Db6060B9A5c47F22faf1c5272"
+      polygonMumbai: "0xE5785F167bE001B2c4576b6CE0edE2C21203906F"
     }
   }
 };

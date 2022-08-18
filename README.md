@@ -9,35 +9,36 @@ npx hardhat deploy --network polygonMumbai
 ```
 Network: polygonMumbai
 Using Ledger account: 0xff2416aC6D95ee66fa095453531970291a3651a6
-Using contract: NFT1
-Contract deployed to address: 0x2E6185f3d231a82Db6060B9A5c47F22faf1c5272
+Using contract: NFT1a
+Contract deployed to address: 0xE5785F167bE001B2c4576b6CE0edE2C21203906F
 ```
 
 ```shell
-npx hardhat verify --network polygonMumbai 0x2E6185f3d231a82Db6060B9A5c47F22faf1c5272 --contract contracts/NFT.sol:NFT1
+npx hardhat verify --network polygonMumbai 0xE5785F167bE001B2c4576b6CE0edE2C21203906F --contract contracts/NFT.sol:NFT1a
 ```
 
 ```
-https://mumbai.polygonscan.com/address/0x2E6185f3d231a82Db6060B9A5c47F22faf1c5272#code
+https://mumbai.polygonscan.com/address/0xE5785F167bE001B2c4576b6CE0edE2C21203906F#code
 ```
 
 ```shell
 npx hardhat mint --network polygonMumbai
+//npx hardhat multimint --network polygonMumbai
 ```
 
 ```
 Network: polygonMumbai
 Using Ledger account: 0xff2416aC6D95ee66fa095453531970291a3651a6
-Using contract: NFT1
-Using contract address: 0x2E6185f3d231a82Db6060B9A5c47F22faf1c5272
+Using contract: NFT1a
+Using contract address: 0xE5785F167bE001B2c4576b6CE0edE2C21203906F
 Minting to: 0xff2416aC6D95ee66fa095453531970291a3651a6
-Transaction Hash: 0x287540fff5964b15bc1d04997dad1ea7f6f48c2a1fa097e47950e0198c85683e
+Transaction Hash: 0x32c0cb3177db5d4109f729b86381ea9f42f79119cfe62ecd8091b7ec8f4f862e
 ```
 
-https://mumbai.polygonscan.com/tx/0x287540fff5964b15bc1d04997dad1ea7f6f48c2a1fa097e47950e0198c85683e
+https://mumbai.polygonscan.com/tx/0x32c0cb3177db5d4109f729b86381ea9f42f79119cfe62ecd8091b7ec8f4f862e
 
 OpenSea Mumbai Testnet
-https://testnets.opensea.io/assets/mumbai/0x2E6185f3d231a82Db6060B9A5c47F22faf1c5272/0
+https://testnets.opensea.io/assets/mumbai/0xE5785F167bE001B2c4576b6CE0edE2C21203906F/0
 
 ```shell
 npx hardhat token-uri --id 0 --network polygonMumbai
