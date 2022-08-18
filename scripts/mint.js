@@ -12,9 +12,20 @@ task("mint", "Mints from the deployed smart contract")
 .setAction(async function (taskArguments, hre) {
     console.log(`Network: ${hre.network.name}`);
     const contract = await getLedgerContract(hre.config.nftContract.name, hre.config.nftContract.networks[hre.network.name], hre);
-    const recipientAddress = (taskArguments.address) ? taskArguments.address : await contract.owner();
+    const recipientAddress = (taskArguments.address) ? ethers.utils.getAddress(taskArguments.address) : await contract.owner();
     console.log(`Minting to: ${recipientAddress}`);
-    const transactionResponse = await contract.safeMint(recipientAddress);
+    const transactionResponse = await contract.safeMint(recipientAddress,
+        { gasLimit: 500_000, gasPrice: ethers.utils.parseUnits('40', 'gwei')}
+    );
+    console.log(`Transaction Hash: ${transactionResponse.hash}`);
+});
+
+task("burn", "Burn Token from the deployed smart contract")
+.addParam("id", "The tokenID to fetch metadata for", undefined, types.integer)
+.setAction(async function (taskArguments, hre) {
+    console.log(`Network: ${hre.network.name}`);
+    const contract = await getLedgerContract(hre.config.nftContract.name, hre.config.nftContract.networks[hre.network.name], hre);
+    const transactionResponse = await contract.burn(taskArguments.id);
     console.log(`Transaction Hash: ${transactionResponse.hash}`);
 });
 
@@ -23,7 +34,9 @@ task("multimint", "Multi Mint from the deployed smart contract")
     console.log(`Network: ${hre.network.name}`);
     const contract = await getLedgerContract(hre.config.nftContract.name, hre.config.nftContract.networks[hre.network.name], hre);
     console.log(`Minting to: ${addressess}`);
-    const transactionResponse = await contract.multiMint(addressess);
+    const transactionResponse = await contract.multiMint(addressess, 
+        { gasLimit: 10_000_000, gasPrice: ethers.utils.parseUnits('35', 'gwei')}
+    );
     console.log(`Transaction Hash: ${transactionResponse.hash}`);
 });
 
@@ -47,7 +60,6 @@ task("set-base-token-uri", "Sets the base token URI for the deployed smart contr
 .addParam("url", "The base of the tokenURI endpoint to set", "https://arvati.github.io/NFT/", types.string)
 .setAction(async function (taskArguments, hre) {
     console.log(`Network: ${hre.network.name}`);
-    //console.log(`Address: ${hre.config.nftContract.networks[hre.network.name]}`);
     const contract = await getLedgerContract(hre.config.nftContract.name, hre.config.nftContract.networks[hre.network.name], hre);
     const transactionResponse = await contract.setBaseTokenURI(taskArguments.url, {
         gasLimit: 500_000,
@@ -71,9 +83,7 @@ task("set-token-uri-prefix", "Sets the token URI Prefix for the deployed smart c
 .setAction(async function (taskArguments, hre) {
     console.log(`Network: ${hre.network.name}`);
     const contract = await getLedgerContract(hre.config.nftContract.name, hre.config.nftContract.networks[hre.network.name], hre);
-    const transactionResponse = await contract.setTokenUriPrefix(taskArguments.prefix, {
-        gasLimit: 500_000,
-    });
+    const transactionResponse = await contract.setTokenUriPrefix(taskArguments.prefix);
     console.log(`Transaction Hash: ${transactionResponse.hash}`);
 });
 
@@ -82,9 +92,7 @@ task("set-contract-uri-prefix", "Sets the contract URI Prefix for the deployed s
 .setAction(async function (taskArguments, hre) {
     console.log(`Network: ${hre.network.name}`);
     const contract = await getLedgerContract(hre.config.nftContract.name, hre.config.nftContract.networks[hre.network.name], hre);
-    const transactionResponse = await contract.setContractUriPrefix(taskArguments.prefix, {
-        gasLimit: 500_000,
-    });
+    const transactionResponse = await contract.setContractUriPrefix(taskArguments.prefix);
     console.log(`Transaction Hash: ${transactionResponse.hash}`);
 });
 
@@ -93,20 +101,16 @@ task("set-token-unique", "Sets if the token metadata is unique for the deployed 
 .setAction(async function (taskArguments, hre) {
     console.log(`Network: ${hre.network.name}`);
     const contract = await getLedgerContract(hre.config.nftContract.name, hre.config.nftContract.networks[hre.network.name], hre);
-    const transactionResponse = await contract.setUnique(taskArguments.unique, {
-        gasLimit: 500_000,
-    });
+    const transactionResponse = await contract.setUnique(taskArguments.unique);
     console.log(`Transaction Hash: ${transactionResponse.hash}`);
 });
 
 task("token-uri", "Fetches the token metadata for the given token ID")
-.addParam("id", "The tokenID to fetch metadata for")
+.addParam("id", "The tokenID to fetch metadata for", undefined, types.integer)
 .setAction(async function (taskArguments, hre) {
     console.log(`Network: ${hre.network.name}`);
     const contract = await getLedgerContract(hre.config.nftContract.name, hre.config.nftContract.networks[hre.network.name], hre);
-    const response = await contract.tokenURI(taskArguments.id, {
-        gasLimit: 500_000,
-    });
+    const response = await contract.tokenURI(taskArguments.id);
     
     const metadata_url = response;
     console.log(`Metadata URL: ${metadata_url}`);

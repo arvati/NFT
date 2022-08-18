@@ -39,12 +39,18 @@ module.exports = {
       //url: `https://polygon-mainnet.g.alchemy.com/v2/${ALCHEMY_KEY}`
       url: `https://polygon-mainnet.infura.io/v3/${INFURA_KEY}`,
       chainId: 137,
+      gasMultiplier: 10,
+      gasPrice: 35000000000,
+      gasLimit: 300000,
       accounts: [WALLET_PRIVATE_KEY]
     },
     polygonMumbai: {
       //url: `https://polygon-mumbai.g.alchemy.com/v2/${ALCHEMY_KEY}`
       url: `https://polygon-mumbai.infura.io/v3/${INFURA_KEY}`,
       chainId: 80001,
+      gasMultiplier: 10,
+      gasPrice: 35000000000,
+      gasLimit: 300000,
       accounts: [WALLET_PRIVATE_KEY]
     }
   },
@@ -66,10 +72,10 @@ module.exports = {
     path: 1
   },
   nftContract: {
-    name: "NFT1a",
+    name: "N48",
     networks: {
-      polygon: "",
-      polygonMumbai: "0xE5785F167bE001B2c4576b6CE0edE2C21203906F"
+      polygon: "0xD908b62E06D263BE1cec87700e7f170981CCdA1E",
+      polygonMumbai: "0x1CE5879C3e4419108A25063E222a12FCA58f828a"
     }
   }
 };

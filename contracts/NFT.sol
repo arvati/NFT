@@ -13,7 +13,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 import "hardhat/console.sol";
 
 /// @custom:security-contact mazinho
-contract NFT1a is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
+contract N48 is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
     using Counters for Counters.Counter;
     using Strings for uint256;
 
@@ -25,7 +25,7 @@ contract NFT1a is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
     string private _uriSuffix;
     bool private _unique;
 
-    constructor() ERC721("NFT 1a", "NFT1a") 
+    constructor() ERC721("Niver 16/08", "N48") 
     {
         _baseTokenURI = "https://corp.eng.br/NFT/";
         _tokenUriPrefix = "metadata/";
