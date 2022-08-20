@@ -1,8 +1,8 @@
 {
     "description": "Dino Draft publicado na Mumbai Polygon", 
-    "external_url": "https://arvati.github.io/NFT/dino/index.html", 
+    "external_url": "https://arvati.github.io/NFT/page/dino/index.html", 
     "image": "https://arvati.github.io/NFT/image/dino/2.png", 
-    "animation_url": "https://arvati.github.io/NFT/dino/index.html", 
+    "animation_url": "https://arvati.github.io/NFT/page/dino/index.html", 
     "background_color": "FFFFFF",
     "name": "Dino 2 Mumbai",
     "attributes": [
