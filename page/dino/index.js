@@ -2777,7 +2777,7 @@ function onDocumentLoad() {
   }
   
   //usage:
-  readTextFile(""../../metadata/dino/" + tokenId + ".json", 
+  readTextFile("../../metadata/dino/" + tokenId + ".json", 
     function(data) {
       gameStart(data);
     },
