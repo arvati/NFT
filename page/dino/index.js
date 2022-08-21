@@ -2709,6 +2709,17 @@
 
 
 function onDocumentLoad() {
+
+  
+  (document.location.hash) ? tokenId = document.location.hash.slice(1) : tokenId = "Dino";
+  (tokenId == "Dino") ? titleBox = tokenId : titleBox = "Dino (" + tokenId + ")";
+
+  document.getElementById("offline-resources-1x").src = tokenId + "-sprite-1x.png";
+  document.getElementById("offline-resources-2x").src = tokenId + "-sprite-2x.png";
+
+  document.getElementsByClassName("icon-offline")[0].style = "content: -webkit-image-set( url(" + tokenId + "-error-1x.png) 1x, url(" + tokenId + "-error-2x.png) 2x);position: relative;"
+  document.getElementById("titleBox").getElementsByTagName('p')[0].innerHTML = titleBox;
+  
     new Runner('.interstitial-wrapper');
 }
 

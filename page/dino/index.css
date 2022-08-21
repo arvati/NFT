@@ -2,6 +2,11 @@
  * Use of this source code is governed by a BSD-style license that can be
  * found in the LICENSE file. */
 
+@font-face {
+    font-family: Pixel;
+    src: url(Apple.ttf);
+}
+
 html, body {
   padding: 0;
   margin: 0;
@@ -16,7 +21,7 @@ html, body {
 }
 
 .icon-offline {
-  content: -webkit-image-set( url(assets/default_100_percent/100-error-offline.png) 1x, url(assets/default_200_percent/200-error-offline.png) 2x);
+  content: -webkit-image-set( url(Dino-error-1x.png) 1x, url(Dino-error-2x.png) 2x);
   position: relative;
 }
 
