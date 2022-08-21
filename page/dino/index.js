@@ -2708,28 +2708,12 @@
 })();
 
 
-function onDocumentLoad() {
-
-  if (document.location.hash) {
-    tokenId = document.location.hash.slice(1)
-    titleBox = "Dino (" + tokenId + ")"
-  } else {
-    tokenId = "Dino";
-    titleBox = tokenId
-  }
-
-  resources_1x = tokenId + "-sprite-1x.png"
-  resources_2x = tokenId + "-sprite-2x.png"
-  icon_1x = tokenId + "-icon-1x.png"
-  icon_2x = tokenId + "-icon-2x.png"
-
-  document.getElementById("titleBox").getElementsByTagName('p')[0].innerHTML = titleBox;
-
-  document.getElementById("offline-resources-1x").src = resources_1x;
-  document.getElementById("offline-resources-2x").src = resources_2x;
-  document.getElementsByClassName("icon-offline")[0].style = "content: -webkit-image-set( url(" + icon_1x + ") 1x, url(" + icon_2x + ") 2x);position: relative;"
-
-  new Runner('.interstitial-wrapper', defaultConfig);
+function gameStart(data) {
+  document.getElementById("titleBox").getElementsByTagName('p')[0].innerHTML = data.name;
+  document.getElementById("offline-resources-1x").src = data.game_config.resources_1x;
+  document.getElementById("offline-resources-2x").src = data.game_config.resources_2x;
+  document.getElementsByClassName("icon-offline")[0].style = "content: -webkit-image-set( url(" + data.game_config.icon_1x + ") 1x, url(" + data.game_config.icon_2x + ") 2x);position: relative;"
+  new Runner('.interstitial-wrapper', data.game_config);
 }
 
 defaultConfig = {
@@ -2759,5 +2743,48 @@ defaultConfig = {
   icon_1x: 'Dino-icon-1x.png',
   icon_2x: 'Dino-icon-2x.png'
 };
+
+function readTextFile(file, success, error) {
+    var rawFile = new XMLHttpRequest();
+    rawFile.overrideMimeType("application/json");
+    rawFile.open("GET", file, true);
+
+    rawFile.onreadystatechange = function() { 
+		  if (rawFile.readyState === XMLHttpRequest.DONE) { 
+			  if (rawFile.status === 200) { 
+				  if (success) success(JSON.parse(rawFile.responseText)); 
+		    } else { 
+			    if (error) error({name: 'Dino', game_config: defaultConfig}); 
+			  } 
+		  } 
+	  }; 
+    rawFile.send(null);
+}
+
+function isPositiveInteger(str) {
+  if (typeof str !== 'string') return false;
+  const num = Number(str);
+  if (Number.isInteger(num) && num > 0) return true;
+  return false;
+}
+
+function onDocumentLoad() {
+  if (document.location.hash) {
+    tokenId = document.location.hash.slice(1)
+    tokenId = isPositiveInteger(tokenId) ? tokenId : "Dino"
+  } else {
+    tokenId = "Dino";
+  }
+  
+  //usage:
+  readTextFile(""../../metadata/dino/" + tokenId + ".json", 
+    function(data) {
+      gameStart(data);
+    },
+    function(data) {
+      gameStart(data);
+    });
+  
+}
 
 document.addEventListener('DOMContentLoaded', onDocumentLoad);
