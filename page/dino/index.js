@@ -2710,17 +2710,54 @@
 
 function onDocumentLoad() {
 
-  
-  (document.location.hash) ? tokenId = document.location.hash.slice(1) : tokenId = "Dino";
-  (tokenId == "Dino") ? titleBox = tokenId : titleBox = "Dino (" + tokenId + ")";
+  if (document.location.hash) {
+    tokenId = document.location.hash.slice(1)
+    titleBox = "Dino (" + tokenId + ")"
+  } else {
+    tokenId = "Dino";
+    titleBox = tokenId
+  }
 
-  document.getElementById("offline-resources-1x").src = tokenId + "-sprite-1x.png";
-  document.getElementById("offline-resources-2x").src = tokenId + "-sprite-2x.png";
+  resources_1x = tokenId + "-sprite-1x.png"
+  resources_2x = tokenId + "-sprite-2x.png"
+  icon_1x = tokenId + "-icon-1x.png"
+  icon_2x = tokenId + "-icon-2x.png"
 
-  document.getElementsByClassName("icon-offline")[0].style = "content: -webkit-image-set( url(" + tokenId + "-error-1x.png) 1x, url(" + tokenId + "-error-2x.png) 2x);position: relative;"
   document.getElementById("titleBox").getElementsByTagName('p')[0].innerHTML = titleBox;
-  
-    new Runner('.interstitial-wrapper');
+
+  document.getElementById("offline-resources-1x").src = resources_1x;
+  document.getElementById("offline-resources-2x").src = resources_2x;
+  document.getElementsByClassName("icon-offline")[0].style = "content: -webkit-image-set( url(" + icon_1x + ") 1x, url(" + icon_2x + ") 2x);position: relative;"
+
+  new Runner('.interstitial-wrapper', defaultConfig);
 }
+
+defaultConfig = {
+  ACCELERATION: 0.001,
+  BG_CLOUD_SPEED: 0.2,
+  BOTTOM_PAD: 10,
+  CLEAR_TIME: 3000,
+  CLOUD_FREQUENCY: 0.5,
+  GAMEOVER_CLEAR_TIME: 750,
+  GAP_COEFFICIENT: 0.6,
+  GRAVITY: 0.6,
+  INITIAL_JUMP_VELOCITY: 12,
+  INVERT_FADE_DURATION: 12000,
+  INVERT_DISTANCE: 700,
+  MAX_BLINK_COUNT: 3,
+  MAX_CLOUDS: 6,
+  MAX_OBSTACLE_LENGTH: 3,
+  MAX_OBSTACLE_DUPLICATION: 2,
+  MAX_SPEED: 13,
+  MIN_JUMP_HEIGHT: 35,
+  MOBILE_SPEED_COEFFICIENT: 1.2,
+  RESOURCE_TEMPLATE_ID: 'audio-resources',
+  SPEED: 6,
+  SPEED_DROP_COEFFICIENT: 3,
+  resources_1x: 'Dino-sprite-1x.png',
+  resources_2x: 'Dino-sprite-2x.png',
+  icon_1x: 'Dino-icon-1x.png',
+  icon_2x: 'Dino-icon-2x.png'
+};
 
 document.addEventListener('DOMContentLoaded', onDocumentLoad);
