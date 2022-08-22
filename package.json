@@ -6,9 +6,11 @@
   "license": "MIT",
   "devDependencies": {
     "@anders-t/ethers-ledger": "^1.0.4",
+    "@nomicfoundation/hardhat-chai-matchers": "^1.0.3",
     "@nomicfoundation/hardhat-toolbox": "^1.0.2",
     "@nomiclabs/hardhat-ethers": "^2.1.1",
     "@nomiclabs/hardhat-etherscan": "^3.1.0",
+    "chai": "^4.3.6",
     "hardhat": "^2.10.2",
     "node-fetch": "^3.2.10"
   },

@@ -1,8 +1,9 @@
 /** @type import('hardhat/config').HardhatUserConfig */
 
 require("@nomicfoundation/hardhat-toolbox");
-require("@nomiclabs/hardhat-etherscan")
-require("@nomiclabs/hardhat-ethers")
+require("@nomiclabs/hardhat-etherscan");
+require("@nomiclabs/hardhat-ethers");
+require("@nomicfoundation/hardhat-chai-matchers");
 
 require('dotenv').config();
 
@@ -73,6 +74,14 @@ module.exports = {
   },
   nftContract: {
     name: "Dino",
+    constructor: {
+      symbol: "Dino",
+      name: "Dino Game",
+      baseTokenURI: "https://corp.eng.br/NFT/",
+      tokenUriPrefix: "metadata/dino/",
+      contractUriPrefix: "collection/",
+      uriSuffix: ".json",
+    },
     networks: {
       polygon: "0x",
       polygonMumbai: "0x"

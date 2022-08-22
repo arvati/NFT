@@ -12,7 +12,7 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 
 import "hardhat/console.sol";
 
-import "helpers.sol";
+import "contracts/helpers.sol";
 
 /// @custom:security-contact mazinho
 contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
@@ -29,16 +29,19 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
     string private _uriSuffix;
     uint256 private _unique;
 
-    constructor() ERC721("Dino Game", "Dino") 
+    constructor(string memory baseTokenURI, string memory tokenUriPrefix, string memory contractUriPrefix, string memory uriSuffix) 
+        ERC721("Dino Game", "Dino") 
     {
-        _baseTokenURI = "https://corp.eng.br/NFT/";
-        _tokenUriPrefix = "metadata/dino/";
-        _contractUriPrefix = "collection/";
-        _uriSuffix = ".json";
+        _baseTokenURI = baseTokenURI;
+        _tokenUriPrefix = tokenUriPrefix;
+        _contractUriPrefix = contractUriPrefix;
+        _uriSuffix = uriSuffix;
         _unique = 0;
     }
 
-    function _baseURI() internal view override returns (string memory) 
+    function _baseURI() 
+        internal view override 
+        returns (string memory) 
     {
         return _baseTokenURI;
     }
@@ -50,12 +53,14 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
     }
 
     function pause() 
-        public onlyOwner {
+        public onlyOwner 
+    {
         _pause();
     }
 
     function unpause() 
-        public onlyOwner {
+        public onlyOwner 
+    {
         _unpause();
     }
 
@@ -163,7 +168,7 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
     {
         _requireMinted(tokenId);
         string memory tokenURIsaved = _tokenURIs[tokenId];
-        string baseURI = _baseURI();
+        string memory baseURI = _baseURI();
         string memory tokenURIresult;      
         
         if (tokenURIsaved.contains(":")) {

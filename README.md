@@ -3,6 +3,7 @@ Mint de NFT N48
 
 ```shell
 npx hardhat compile
+npx hardhat test --network hardhat
 npx hardhat deploy --network polygonMumbai
 ```
 
