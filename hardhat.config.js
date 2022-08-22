@@ -72,10 +72,10 @@ module.exports = {
     path: 1
   },
   nftContract: {
-    name: "N48",
+    name: "Dino",
     networks: {
-      polygon: "0xD908b62E06D263BE1cec87700e7f170981CCdA1E",
-      polygonMumbai: "0x1CE5879C3e4419108A25063E222a12FCA58f828a"
+      polygon: "0x",
+      polygonMumbai: "0x"
     }
   }
 };
