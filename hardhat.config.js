@@ -31,7 +31,10 @@ module.exports = {
   },
   mocha: {
     timeout: 20000,
-    bail: true
+    failZero: true,
+    bail: true,
+    forbidOnly: true,
+    forbidPending: true
   },
   defaultNetwork: "polygon",
   networks: {

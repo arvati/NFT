@@ -2,20 +2,33 @@
 pragma solidity ^0.8.9;
 
 library StringsHelper {
-    function concatenate(string memory text1, string memory text2)
+    function isEmpty(string memory text)
+        internal pure
+        returns (bool)
+    {
+        return (bytes(text).length > 0) ? false : true ;
+    }
+
+    function concat(string memory text1, string memory text2)
         internal pure
         returns (string memory)
     {
         unchecked {
-            if (bytes(text2).length > 0) {
-                return bytes(text1).length > 0 ? string(abi.encodePacked(text1, text2)) : text2;
+            if (bytes(text2).length > 0 && bytes(text1).length > 0) {
+                return string(abi.encodePacked(text1, text2));
+            }
+            else if (bytes(text2).length > 0) {
+                return text2;
+            }
+            else if (bytes(text1).length > 0) {
+                return text1;
             } else {
-                return bytes(text1).length > 0 ? text1 : "";
+                return "";
             }
         }
     }
 
-    function contains(string memory where, string memory what) 
+    function includes(string memory where, string memory what) 
         internal pure
         returns (bool)
     {

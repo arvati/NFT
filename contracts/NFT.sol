@@ -72,7 +72,7 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
         _safeMint(to, tokenId);
     }
 
-    function safeMint(address to, string memory uri) 
+    function safeMintURI(address to, string memory uri) 
         public onlyOwner 
     {
         uint256 tokenId = _tokenIdCounter.current();
@@ -158,8 +158,14 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
         returns (string memory) 
     {
         string memory baseURI = _baseURI();
-        string memory symbol = symbol();
-        return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, _contractUriPrefix, symbol, _uriSuffix)) : "";
+        string memory contractURIresult;
+        if (!baseURI.isEmpty()) {
+            contractURIresult = baseURI.concat(_contractUriPrefix);
+            contractURIresult = contractURIresult.concat(symbol());
+            return contractURIresult.concat(_uriSuffix);
+        } else {
+            return "";
+        }
     }
 
     function tokenURI(uint256 tokenId)
@@ -170,20 +176,21 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
         string memory tokenURIsaved = _tokenURIs[tokenId];
         string memory baseURI = _baseURI();
         string memory tokenURIresult;      
-        
-        if (tokenURIsaved.contains(":")) {
+        if (tokenURIsaved.includes(":")) {
             return tokenURIsaved;
-        } else {
-            tokenURIresult = baseURI.concatenate(_tokenUriPrefix);
-            if (bytes(tokenURIsaved).length > 0) {
-                tokenURIresult = tokenURIresult.concatenate(tokenURIsaved);
+        } else if (!baseURI.isEmpty()) {
+            tokenURIresult = baseURI.concat(_tokenUriPrefix);
+            if (!tokenURIsaved.isEmpty()) {
+                tokenURIresult = tokenURIresult.concat(tokenURIsaved);
             } else if (tokenId < _unique) {
-                tokenURIresult = tokenURIresult.concatenate(tokenId.toString());
+                tokenURIresult = tokenURIresult.concat(tokenId.toString());
             } else {
-                tokenURIresult = tokenURIresult.concatenate(symbol());
+                tokenURIresult = tokenURIresult.concat(symbol());
             }
-            return tokenURIresult.concatenate(_uriSuffix);  
-        }   
+            return tokenURIresult.concat(_uriSuffix);  
+        } else {
+            return (!tokenURIsaved.isEmpty()) ? tokenURIsaved : "";
+        }  
     }
 
 }
