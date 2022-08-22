@@ -12,10 +12,13 @@ import "@openzeppelin/contracts/utils/Strings.sol";
 
 import "hardhat/console.sol";
 
+import "helpers.sol";
+
 /// @custom:security-contact mazinho
 contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
     using Counters for Counters.Counter;
     using Strings for uint256;
+    using StringsHelper for string;
 
     Counters.Counter private _tokenIdCounter;
     mapping(uint256 => string) private _tokenURIs;
@@ -64,6 +67,15 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
         _safeMint(to, tokenId);
     }
 
+    function safeMint(address to, string memory uri) 
+        public onlyOwner 
+    {
+        uint256 tokenId = _tokenIdCounter.current();
+        _tokenIdCounter.increment();
+        _safeMint(to, tokenId);
+        _setTokenURI(tokenId, uri);
+    }
+
     function multiMint(address[] memory tos)
         public onlyOwner 
     {
@@ -74,9 +86,17 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
         }
     }
 
-    function _setTokenURI(uint256 tokenId, string memory _tokenURI) internal virtual {
+    function _setTokenURI(uint256 tokenId, string memory _tokenURI) 
+        internal 
+    {
         require(_exists(tokenId), "ERC721URIStorage: URI set of nonexistent token");
         _tokenURIs[tokenId] = _tokenURI;
+    }
+
+    function setTokenURI(uint256 tokenId, string memory uri) 
+        public onlyOwner 
+    {
+        _setTokenURI(tokenId, uri);
     }
 
     function _beforeTokenTransfer(address from, address to, uint256 tokenId)
@@ -88,7 +108,9 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
 
     // The following functions are overrides required by Solidity.
 
-    function _burn(uint256 tokenId) internal override(ERC721) {
+    function _burn(uint256 tokenId) 
+        internal override(ERC721) 
+    {
         super._burn(tokenId);
         if (bytes(_tokenURIs[tokenId]).length != 0) {
             delete _tokenURIs[tokenId];
@@ -135,67 +157,27 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
         return bytes(baseURI).length > 0 ? string(abi.encodePacked(baseURI, _contractUriPrefix, symbol, _uriSuffix)) : "";
     }
 
-    function safeConcatenate(string memory text1, string memory text2)
-        private pure
-        returns (string memory)
-    {
-        if (bytes(text2).length > 0) {
-            return bytes(text1).length > 0 ? string(abi.encodePacked(text1, text2)) : text2;
-        } else {
-            return bytes(text1).length > 0 ? text1 : "";
-        }
-    }
-
-    function safeContains(string memory what, string memory where) 
-        private pure
-        returns (bool)
-    {
-        bytes memory whatBytes = bytes (what);
-        bytes memory whereBytes = bytes (where);
-
-        if (whereBytes.length == 0 || whatBytes.length == 0) {
-            return false;
-        }
-        if (whereBytes.length < whatBytes.length) {
-            whereBytes = whatBytes;
-            whatBytes = bytes (where);
-        }
-        bool found = false;
-        for (uint i = 0; i <= whereBytes.length - whatBytes.length; i++) {
-            bool flag = true;
-            for (uint j = 0; j < whatBytes.length; j++)
-                if (whereBytes [i + j] != whatBytes [j]) {
-                    flag = false;
-                    break;
-                }
-            if (flag) {
-                found = true;
-                break;
-            }
-        }
-        return found;
-    }
-
     function tokenURI(uint256 tokenId)
         public view override(ERC721) 
         returns (string memory) 
     {
         _requireMinted(tokenId);
         string memory tokenURIsaved = _tokenURIs[tokenId];
+        string baseURI = _baseURI();
         string memory tokenURIresult;      
         
-        if (safeContains(":",tokenURIsaved)) {
+        if (tokenURIsaved.contains(":")) {
             return tokenURIsaved;
         } else {
-            tokenURIresult = safeConcatenate(_baseURI(), _tokenUriPrefix);
+            tokenURIresult = baseURI.concatenate(_tokenUriPrefix);
             if (bytes(tokenURIsaved).length > 0) {
-                tokenURIresult = safeConcatenate(tokenURIresult, tokenURIsaved);
+                tokenURIresult = tokenURIresult.concatenate(tokenURIsaved);
             } else if (tokenId < _unique) {
-                tokenURIresult = safeConcatenate(tokenURIresult, tokenId.toString());
+                tokenURIresult = tokenURIresult.concatenate(tokenId.toString());
             } else {
-                tokenURIresult = safeConcatenate(tokenURIresult, symbol());
+                tokenURIresult = tokenURIresult.concatenate(symbol());
             }
-            return safeConcatenate(tokenURIresult, _uriSuffix);  
+            return tokenURIresult.concatenate(_uriSuffix);  
         }   
     }
 
