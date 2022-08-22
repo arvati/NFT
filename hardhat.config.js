@@ -30,7 +30,8 @@ module.exports = {
     artifacts: "./artifacts"
   },
   mocha: {
-    timeout: 20000
+    timeout: 20000,
+    bail: true
   },
   defaultNetwork: "polygon",
   networks: {

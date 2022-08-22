@@ -3,6 +3,10 @@ const hre = require("hardhat");
 const { ethers } = hre;
 const  contractName = hre.config.nftContract.name;
 
+it("should be hardhat network", async () => {
+  expect(hre.network.name).to.equal("hardhat");
+});
+
 describe(contractName, function () {
 
   let contractFactory;
@@ -15,7 +19,6 @@ describe(contractName, function () {
   let bobAddress;
 
   const { name, symbol, baseTokenURI, tokenUriPrefix, contractUriPrefix, uriSuffix } = hre.config.nftContract.constructor;
-  console.log(`Network: ${hre.network.name}`);
 
   beforeEach(async () => {
     [owner, alice, bob] = await ethers.getSigners();
