@@ -24,13 +24,13 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
     Counters.Counter private _tokenIdCounter;
     mapping(uint256 => string) private _tokenURIs;
     mapping(bytes32 => bool) private _Claims;
+    mapping(bytes => bytes32) private _merkleRoots;
 
     string private _baseTokenURI;
     string private _tokenUriPrefix;
     string private _contractUriPrefix;
     string private _uriSuffix;
     uint256 private _unique;
-    bytes32 private _merkleRoot;
 
     constructor(string memory baseTokenURI, string memory tokenUriPrefix, string memory contractUriPrefix, string memory uriSuffix) 
         ERC721("Dino Game", "Dino") 
@@ -40,7 +40,6 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
         _contractUriPrefix = contractUriPrefix;
         _uriSuffix = uriSuffix;
         _unique = 0;
-        _merkleRoot = "";
     }
 
     function _baseURI() 
@@ -56,10 +55,16 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
         _baseTokenURI = baseTokenURI;
     }
 
-    function setMerkleRoot(bytes32 merkleRoot) 
+    function setMerkleRoot(bytes32 merkleRoot, string memory voucher) 
         public onlyOwner
     {
-        _merkleRoot = merkleRoot;
+        _merkleRoots[abi.encodePacked(voucher)] = merkleRoot;
+    }
+
+    function removeMerkleRoot(string memory voucher) 
+        public onlyOwner
+    {
+        delete _merkleRoots[abi.encodePacked(voucher)];
     }
 
     function pause() 
@@ -87,7 +92,8 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
         returns(bool) 
     {
         bytes32 leaf = keccak256(abi.encode(to, voucher));
-        bool verified = MerkleProof.verify(proof, _merkleRoot, leaf);
+        bytes32 root = _merkleRoots[abi.encodePacked(voucher)];
+        bool verified = MerkleProof.verify(proof, root, leaf);
         return verified;
     }
 
@@ -96,7 +102,8 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
     {
         bytes32 leaf = keccak256(abi.encode(msg.sender, voucher));
         require(!_Claims[leaf], "Address has already claimed this voucher.");
-        require(MerkleProof.verify(_merkleProof, _merkleRoot, leaf), "Invalid proof for this root and leaf");
+        bytes32 root = _merkleRoots[abi.encodePacked(voucher)];
+        require(MerkleProof.verify(_merkleProof, root, leaf), "Invalid proof for this root and leaf");
         _Claims[leaf] = true ;
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();

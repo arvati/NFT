@@ -40,7 +40,7 @@ describe("Claim functions at contract " + contractName, function () {
         ];
         const merkleTree = new MerkleTree(list, keccak256, {hashLeaves: true, sortPairs: true});
         const root = merkleTree.getHexRoot();
-        const setMerkleRootTx = await contract.setMerkleRoot(root);
+        const setMerkleRootTx = await contract.setMerkleRoot(root, voucher);
         await setMerkleRootTx.wait();
 
         const leaf = keccak256(list[1]);
