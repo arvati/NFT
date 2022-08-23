@@ -14,7 +14,7 @@ task("mint", "Mints from the deployed smart contract")
     const contract = await getLedgerContract(hre.config.nftContract.name, hre.config.nftContract.networks[hre.network.name], hre);
     const recipientAddress = (taskArguments.address) ? ethers.utils.getAddress(taskArguments.address) : await contract.owner();
     console.log(`Minting to: ${recipientAddress}`);
-    const transactionResponse = await contract.safeMint(recipientAddress,
+    const transactionResponse = await contract['mint(address)'](recipientAddress,
         { gasLimit: 500_000, gasPrice: ethers.utils.parseUnits('40', 'gwei')}
     );
     console.log(`Transaction Hash: ${transactionResponse.hash}`);

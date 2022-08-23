@@ -53,44 +53,48 @@ describe("Basic functions at contract " + contractName, function () {
   describe("Mint Tokens", () => {
     it("mint 1 token", async function () {
       const tokenId = await contract.totalSupply();
-      let safeMintTx = await contract.safeMint(ownerAddress);
+      let safeMintTx = await contract['mint(address)'](ownerAddress);
       await safeMintTx.wait();
       expect(await contract.ownerOf(tokenId)).to.equal(ownerAddress);
       expect(await contract.tokenURI(tokenId)).to.equal(tokenURI(baseTokenURI,tokenUriPrefix,symbol,uriSuffix,0 , tokenId, ""));
+      expect(await contract.totalSupply()).to.equal(tokenId+1);
     });
 
     it("mint Multi token", async function () {
       const tokenId = await contract.totalSupply();
-      let multiMintTx = await contract.multiMint([ownerAddress,aliceAddress,bobAddress]);
+      let multiMintTx = await contract.mmint([ownerAddress,aliceAddress,bobAddress]);
       await multiMintTx.wait();
       expect(await contract.ownerOf(tokenId)).to.equal(ownerAddress);
       expect(await contract.ownerOf(tokenId+1)).to.equal(aliceAddress);
       expect(await contract.ownerOf(tokenId+2)).to.equal(bobAddress);
+      expect(await contract.totalSupply()).to.equal(tokenId+3);
     });
 
     it("mint 1 token with Uri", async function () {
       const tokenURIsaved = "owner"
       const tokenId = await contract.totalSupply();
-      let safeMintURITx = await contract.safeMintURI(ownerAddress, tokenURIsaved);
+      let safeMintURITx = await contract['mint(address,string)'](ownerAddress,tokenURIsaved);     
       await safeMintURITx.wait();
       expect(await contract.ownerOf(tokenId)).to.equal(ownerAddress);
       expect(await contract.tokenURI(tokenId)).to.equal(tokenURI(baseTokenURI,tokenUriPrefix,symbol,uriSuffix,0 ,tokenId, tokenURIsaved));
+      expect(await contract.totalSupply()).to.equal(tokenId+1);
     });
 
     it("mint and burn token", async function () {
       const tokenId = await contract.totalSupply();
-      let safeMintTx = await contract.safeMint(ownerAddress);
+      let safeMintTx = await contract['mint(address)'](ownerAddress);
       await safeMintTx.wait();
       expect(await contract.ownerOf(tokenId)).to.equal(ownerAddress);
       let burnTx = await contract.burn(tokenId);
       await burnTx.wait();
       await expect(contract.ownerOf(tokenId)).to.be.revertedWith("ERC721: invalid token ID");
+      expect(await contract.totalSupply()).to.equal(tokenId);
     });
 
     it("mint with uri and burn token", async function () {
       const tokenURIsaved = "custom"
       const tokenId = await contract.totalSupply();
-      let safeMintURITx = await contract.safeMintURI(ownerAddress, tokenURIsaved);
+      let safeMintURITx = await contract['mint(address,string)'](ownerAddress,tokenURIsaved)
       await safeMintURITx.wait();
       expect(await contract.ownerOf(tokenId)).to.equal(ownerAddress);
       let burnTx = await contract.burn(tokenId);
@@ -136,7 +140,7 @@ describe("Basic functions at contract " + contractName, function () {
 
     beforeEach(async () => {
       tokenId = await contract.totalSupply();
-      const safeMintTx = await contract.safeMint(ownerAddress);
+      const safeMintTx = await contract['mint(address)'](ownerAddress);
       await safeMintTx.wait()
     });
 
@@ -186,7 +190,7 @@ describe("Basic functions at contract " + contractName, function () {
     });  
 
     it("Should return the new tokenURI once tokenURI[0] is forced", async function () {
-      const tokenURIsaved = "ipfs://86676786876879980/teste"
+      const tokenURIsaved = "ipfs://testCID/custom.json"
       const setTokenURITx = await contract.setTokenURI(0, tokenURIsaved);
       await setTokenURITx.wait();
       expect(await contract.tokenURI(tokenId)).to.equal(tokenURI(baseTokenURI,tokenUriPrefix,symbol,uriSuffix, 0 ,tokenId, tokenURIsaved));
@@ -195,13 +199,13 @@ describe("Basic functions at contract " + contractName, function () {
 
   describe("Pause", () => {
     beforeEach(async () => {
-      const safeMintTx = await contract.safeMint(ownerAddress);
+      const safeMintTx = await contract['mint(address)'](ownerAddress);
       await safeMintTx.wait()
     });
 
     it("Transfer Token Paused", async function () {
       tokenId = await contract.totalSupply();
-      expect(await contract.safeMint(ownerAddress)).to.emit(contract, "Transfer")
+      expect(await contract['mint(address)'](ownerAddress)).to.emit(contract, "Transfer")
         .withArgs(ethers.constants.AddressZero, ownerAddress, tokenId);
 
       expect( await contract['safeTransferFrom(address,address,uint256)'](ownerAddress, aliceAddress ,tokenId)).to.be.not.reverted;
@@ -214,7 +218,7 @@ describe("Basic functions at contract " + contractName, function () {
 
     it("Transfer Token unPaused", async function () {
       tokenId = await contract.totalSupply();
-      expect(await contract.safeMint(ownerAddress)).to.emit(contract, "Transfer")
+      expect(await contract['mint(address)'](ownerAddress)).to.emit(contract, "Transfer")
         .withArgs(ethers.constants.AddressZero, ownerAddress, tokenId);
 
       await expect(contract['safeTransferFrom(address,address,uint256)'](ownerAddress, aliceAddress ,tokenId)).to.be.not.reverted;

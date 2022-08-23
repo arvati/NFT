@@ -49,10 +49,13 @@ describe("Claim functions at contract " + contractName, function () {
         expect(await contract.checkClaim(proof, aliceAddress, voucher)).to.equal(true);
 
         const tokenId = await contract.totalSupply();
-        let claimTx = await contract.connect(alice).claim(proof, voucher);
+        const mintPrice = await contract.mintVoucherPrice();
+
+        let claimTx = await contract.connect(alice)['claim(bytes32[],string)'](proof, voucher, { value: mintPrice });
+        
         await claimTx.wait();
         expect(await contract.ownerOf(tokenId)).to.equal(aliceAddress);
 
-        await expect(contract.connect(alice).claim(proof, voucher)).to.be.revertedWith("Address has already claimed this voucher.");
+        await expect(contract.connect(alice)['claim(bytes32[],string)'](proof, voucher, { value: mintPrice })).to.be.revertedWith("Address has already claimed this voucher.");
       });
 });

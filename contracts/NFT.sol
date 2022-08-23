@@ -32,6 +32,10 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
     string private _uriSuffix;
     uint256 private _unique;
 
+    uint256 public maxSupply;
+    uint256 public claimPrice;
+    uint256 public claimVoucherPrice;
+
     constructor(string memory baseTokenURI, string memory tokenUriPrefix, string memory contractUriPrefix, string memory uriSuffix) 
         ERC721("Dino Game", "Dino") 
     {
@@ -40,6 +44,28 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
         _contractUriPrefix = contractUriPrefix;
         _uriSuffix = uriSuffix;
         _unique = 0;
+        maxSupply = 1024;
+        claimPrice = 0.1 ether;
+        claimVoucherPrice = 0.001 ether;
+    }
+
+    function withdraw() 
+        public onlyOwner 
+    {
+        uint256 _amount = address(this).balance;
+        require((_amount >= 0), "No balance to withdraw");
+        (bool success, ) = owner().call{value: _amount}("");
+        require(success, "Withdraw failed");
+    }
+
+    function withdraw(address _tokenContract) 
+        public onlyOwner 
+    {
+        IERC20 tokenContract = IERC20(_tokenContract);
+        uint256 _amount = tokenContract.balanceOf(address(this));
+        require(_amount >= 0, "No Token balance to withdraw");
+        bool success = tokenContract.transferFrom(address(this), owner(), _amount);
+        require(success, "Token withdraw failed");
     }
 
     function _baseURI() 
@@ -47,6 +73,24 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
         returns (string memory) 
     {
         return _baseTokenURI;
+    }
+
+    function setMaxSupply(uint256 _maxSupply) 
+        public onlyOwner
+    {
+        maxSupply = _maxSupply;
+    }
+
+    function setClaimPrice(uint256 _mintPrice) 
+        public onlyOwner
+    {
+        claimPrice = _mintPrice;
+    }
+
+    function setClaimVoucherPrice(uint256 _mintPrice) 
+        public onlyOwner
+    {
+        claimVoucherPrice = _mintPrice;
     }
 
     function setBaseTokenURI(string memory baseTokenURI) 
@@ -79,9 +123,10 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
         _unpause();
     }
 
-    function safeMint(address to) 
+    function mint(address to) 
         public onlyOwner 
     {
+        require(totalSupply() + 1 <= maxSupply, "Supply is exhausted");
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
@@ -98,8 +143,10 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
     }
 
     function claim(bytes32[] calldata _merkleProof, string memory voucher) 
-        public
+        public payable 
     {
+        require(totalSupply() + 1 <= maxSupply, "Supply is exhausted");
+        require( msg.value >= claimVoucherPrice,"Insufficient value for voucher claim");
         bytes32 leaf = keccak256(abi.encode(msg.sender, voucher));
         require(!_Claims[leaf], "Address has already claimed this voucher.");
         bytes32 root = _merkleRoots[abi.encodePacked(voucher)];
@@ -110,7 +157,17 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
         _safeMint(msg.sender, tokenId);        
     }
 
-    function safeMintURI(address to, string memory uri) 
+    function claim() 
+        public payable 
+    {
+        require(totalSupply() + 1 <= maxSupply, "Supply is exhausted");
+        require( msg.value >= claimPrice,"Insufficient value for claim");
+        uint256 tokenId = _tokenIdCounter.current();
+        _tokenIdCounter.increment();
+        _safeMint(msg.sender, tokenId);        
+    }
+
+    function mint(address to, string memory uri) 
         public onlyOwner 
     {
         uint256 tokenId = _tokenIdCounter.current();
@@ -119,13 +176,13 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
         _setTokenURI(tokenId, uri);
     }
 
-    function multiMint(address[] memory tos)
+    function mmint(address[] memory tos)
         public onlyOwner 
     {
         uint i=0;
         for(i;i<tos.length;i++)
         {
-            safeMint(tos[i]);
+            mint(tos[i]);
         }
     }
 
