@@ -14,14 +14,14 @@ library StringsHelper {
         returns (string memory)
     {
         unchecked {
-            if (bytes(text2).length > 0 && bytes(text1).length > 0) {
+            if (!isEmpty(text1) && !isEmpty(text2)) {
                 return string(abi.encodePacked(text1, text2));
             }
-            else if (bytes(text2).length > 0) {
-                return text2;
-            }
-            else if (bytes(text1).length > 0) {
+            else if (!isEmpty(text1)) {
                 return text1;
+            }
+            else if (!isEmpty(text2)) {
+                return text2;
             } else {
                 return "";
             }
@@ -35,7 +35,7 @@ library StringsHelper {
         bytes memory whatBytes = bytes (what);
         bytes memory whereBytes = bytes (where);
         unchecked {
-            if (whereBytes.length == 0 || whatBytes.length == 0) {
+            if (isEmpty(where) || isEmpty(what)) {
                 return false;
             }
             if (whereBytes.length < whatBytes.length) {

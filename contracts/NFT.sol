@@ -9,6 +9,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
+import "@openzeppelin/contracts/utils/cryptography/MerkleProof.sol";
 
 import "hardhat/console.sol";
 
@@ -22,12 +23,14 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
 
     Counters.Counter private _tokenIdCounter;
     mapping(uint256 => string) private _tokenURIs;
+    mapping(bytes32 => bool) private _Claims;
 
     string private _baseTokenURI;
     string private _tokenUriPrefix;
     string private _contractUriPrefix;
     string private _uriSuffix;
     uint256 private _unique;
+    bytes32 private _merkleRoot;
 
     constructor(string memory baseTokenURI, string memory tokenUriPrefix, string memory contractUriPrefix, string memory uriSuffix) 
         ERC721("Dino Game", "Dino") 
@@ -37,6 +40,7 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
         _contractUriPrefix = contractUriPrefix;
         _uriSuffix = uriSuffix;
         _unique = 0;
+        _merkleRoot = "";
     }
 
     function _baseURI() 
@@ -50,6 +54,12 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
         public onlyOwner
     {
         _baseTokenURI = baseTokenURI;
+    }
+
+    function setMerkleRoot(bytes32 merkleRoot) 
+        public onlyOwner
+    {
+        _merkleRoot = merkleRoot;
     }
 
     function pause() 
@@ -70,6 +80,27 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(to, tokenId);
+    }
+
+    function checkClaim(bytes32[] calldata proof, address to, string memory voucher)
+        view public onlyOwner
+        returns(bool) 
+    {
+        bytes32 leaf = keccak256(abi.encode(to, voucher));
+        bool verified = MerkleProof.verify(proof, _merkleRoot, leaf);
+        return verified;
+    }
+
+    function claim(bytes32[] calldata _merkleProof, string memory voucher) 
+        public
+    {
+        bytes32 leaf = keccak256(abi.encode(msg.sender, voucher));
+        require(!_Claims[leaf], "Address has already claimed this voucher.");
+        require(MerkleProof.verify(_merkleProof, _merkleRoot, leaf), "Invalid proof for this root and leaf");
+        _Claims[leaf] = true ;
+        uint256 tokenId = _tokenIdCounter.current();
+        _tokenIdCounter.increment();
+        _safeMint(msg.sender, tokenId);        
     }
 
     function safeMintURI(address to, string memory uri) 

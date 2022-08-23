@@ -8,9 +8,8 @@ it("should be hardhat network", async () => {
   expect(hre.network.name).to.equal("hardhat");
 });
 
-describe(contractName, function () {
+describe("Basic functions at contract " + contractName, function () {
 
-  let contractFactory;
   let contract;
   let owner;
   let alice;
@@ -23,12 +22,12 @@ describe(contractName, function () {
 
   beforeEach(async () => {
     [owner, alice, bob] = await ethers.getSigners();
-    contractFactory = await ethers.getContractFactory(contractName);
-    contract = await contractFactory.deploy(baseTokenURI, tokenUriPrefix, contractUriPrefix, uriSuffix);
-    await contract.deployed()
     ownerAddress = await owner.getAddress();
     aliceAddress = await alice.getAddress();
     bobAddress = await bob.getAddress();
+    const contractFactory = await ethers.getContractFactory(contractName);
+    contract = await contractFactory.deploy(baseTokenURI, tokenUriPrefix, contractUriPrefix, uriSuffix);
+    await contract.deployed()
     //console.log(`Contract deployed to address: ${contract.address}`);
     //console.log(`Contract owner: ${ownerAddress}`);
   });
@@ -205,12 +204,9 @@ describe(contractName, function () {
       expect(await contract.safeMint(ownerAddress)).to.emit(contract, "Transfer")
         .withArgs(ethers.constants.AddressZero, ownerAddress, tokenId);
 
-      const safeTransferFromTx = await contract['safeTransferFrom(address,address,uint256)'](ownerAddress, aliceAddress ,tokenId);
-      await safeTransferFromTx.wait();
-      expect(await contract.ownerOf(tokenId)).to.equal(aliceAddress);
+      expect( await contract['safeTransferFrom(address,address,uint256)'](ownerAddress, aliceAddress ,tokenId)).to.be.not.reverted;
 
-      const pauseTx = await contract.pause();
-      await pauseTx.wait();
+      expect(await contract.pause()).to.be.not.reverted;
 
       await expect(contract.connect(alice)['safeTransferFrom(address,address,uint256)'](aliceAddress, bobAddress ,tokenId)).to.be.revertedWith("Pausable: paused");
       expect(await contract.ownerOf(tokenId)).to.equal(aliceAddress);
@@ -221,18 +217,16 @@ describe(contractName, function () {
       expect(await contract.safeMint(ownerAddress)).to.emit(contract, "Transfer")
         .withArgs(ethers.constants.AddressZero, ownerAddress, tokenId);
 
-      const safeTransferFromTx = await contract['safeTransferFrom(address,address,uint256)'](ownerAddress, aliceAddress ,tokenId);
-      await safeTransferFromTx.wait();
+      await expect(contract['safeTransferFrom(address,address,uint256)'](ownerAddress, aliceAddress ,tokenId)).to.be.not.reverted;
+
       expect(await contract.ownerOf(tokenId)).to.equal(aliceAddress);
 
-      const pauseTx = await contract.pause();
-      await pauseTx.wait();
+      expect(await contract.pause()).to.be.not.reverted;
 
       await expect(contract.connect(alice)['safeTransferFrom(address,address,uint256)'](aliceAddress, bobAddress ,tokenId)).to.be.revertedWith("Pausable: paused");
       expect(await contract.ownerOf(tokenId)).to.equal(aliceAddress);
 
-      const unpauseTx = await contract.unpause();
-      await unpauseTx.wait();
+      expect(await contract.unpause()).to.be.not.reverted;
 
       await expect(contract.connect(alice)['safeTransferFrom(address,address,uint256)'](aliceAddress, bobAddress ,tokenId)).to.emit(contract, "Transfer")
         .withArgs(aliceAddress, bobAddress, tokenId);

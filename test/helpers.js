@@ -29,7 +29,15 @@ function tokenURI (baseTokenURI, tokenUriPrefix, symbol, uriSuffix, _unique, tok
     return tokenURIresult
 }
 
+function encodeLeaf(address, spots) {
+    return ethers.utils.defaultAbiCoder.encode(
+      ["address", "string"],
+      [address, spots]
+    );
+}
+
 module.exports = {
 	contractURI,
-    tokenURI
+    tokenURI,
+    encodeLeaf
 }
