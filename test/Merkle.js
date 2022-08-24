@@ -49,7 +49,7 @@ describe("Claim functions at contract " + contractName, function () {
         expect(await contract.checkClaim(proof, aliceAddress, voucher)).to.equal(true);
 
         const tokenId = await contract.totalSupply();
-        const mintPrice = await contract.mintVoucherPrice();
+        const mintPrice = await contract.claimVoucherPrice();
 
         let claimTx = await contract.connect(alice)['claim(bytes32[],string)'](proof, voucher, { value: mintPrice });
         

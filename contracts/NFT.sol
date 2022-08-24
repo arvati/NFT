@@ -4,6 +4,8 @@ pragma solidity ^0.8.9;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Enumerable.sol";
+import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
+import "@openzeppelin/contracts/token/ERC1155/IERC1155Receiver.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
@@ -58,15 +60,35 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
         require(success, "Withdraw failed");
     }
 
-    function withdraw(address _tokenContract) 
+    function withdraw(address _tokenContract, uint256 amount) 
         public onlyOwner 
     {
         IERC20 tokenContract = IERC20(_tokenContract);
-        uint256 _amount = tokenContract.balanceOf(address(this));
-        require(_amount >= 0, "No Token balance to withdraw");
-        bool success = tokenContract.transferFrom(address(this), owner(), _amount);
+        uint256 balance = tokenContract.balanceOf(address(this));
+        require((balance >= amount && balance >= 0), "No Token balance to withdraw");
+        amount = (amount == 0 ) ? balance : amount;
+        bool success = tokenContract.transferFrom(address(this), owner(), amount);
         require(success, "Token withdraw failed");
     }
+
+    function withdraw(address _tokenContract, uint256 tokenId, bytes calldata data) 
+        public onlyOwner 
+    {
+        IERC721 tokenContract = IERC721(_tokenContract);
+        require( tokenContract.ownerOf(tokenId) == address(this), "No TokenId to withdraw");
+        tokenContract.safeTransferFrom(address(this), owner(), tokenId, data);
+    }
+
+    function withdraw(address _tokenContract, uint256 tokenId, uint256 amount, bytes calldata data) 
+        public onlyOwner 
+    {
+        IERC1155 tokenContract = IERC1155(_tokenContract);
+        uint256 balance = tokenContract.balanceOf(address(this), tokenId);
+        require((balance >= amount && balance >= 0), "No enought Token balance to withdraw");
+        amount = (amount == 0 ) ? balance : amount;
+        tokenContract.safeTransferFrom(address(this), owner(), tokenId, amount, data);
+    }
+
 
     function _baseURI() 
         internal view override 
@@ -165,6 +187,10 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
         uint256 tokenId = _tokenIdCounter.current();
         _tokenIdCounter.increment();
         _safeMint(msg.sender, tokenId);        
+    }
+
+    receive() external payable {
+        claim();
     }
 
     function mint(address to, string memory uri) 
@@ -286,6 +312,14 @@ contract Dino is ERC721, ERC721Enumerable, Pausable, Ownable, ERC721Burnable {
         } else {
             return (!tokenURIsaved.isEmpty()) ? tokenURIsaved : "";
         }  
+    }
+
+    function onERC721Received(address, address, uint256, bytes calldata) external pure returns (bytes4) {
+        return IERC721Receiver.onERC721Received.selector;
+    }
+
+    function onERC1155Received(address, address, uint256, uint256, bytes calldata) external pure returns (bytes4) {
+        return IERC1155Receiver.onERC1155Received.selector;
     }
 
 }

@@ -16,6 +16,19 @@ interface IERC20 {
     event Approval(address indexed owner, address indexed spender, uint value);
 }
 
+interface IERC1155 {
+    function balanceOf(address account, uint256 id) external view returns (uint256);
+    function safeTransferFrom(
+        address from,
+        address to,
+        uint256 id,
+        uint256 amount,
+        bytes calldata data
+    ) external;
+
+    event TransferSingle(address indexed operator, address indexed from, address indexed to, uint256 id, uint256 value);
+}
+
 library StringsHelper {
     function isEmpty(string memory text)
         internal pure
