@@ -21,3 +21,6 @@ typechain-types
 cache
 artifacts
 
+#do not share config.yml public repo
+config.yml
+micro/*.js
