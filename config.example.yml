@@ -1,0 +1,24 @@
+ledger:
+    path: 1
+    connect: false
+env:
+    mnemonic: ''
+log: 3
+testNetwork: 'hardhat'
+contract:
+    Lock: 
+    Token: 
+        -
+            networks: 
+                hardhat: ""
+            args:
+                name: "Token A"
+                symbol: "A"
+            value: 0
+        -
+            networks: 
+                hardhat: ""
+            args:
+                name: "Token B"
+                symbol: "B"
+            value: 0

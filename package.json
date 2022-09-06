@@ -1,0 +1,52 @@
+{
+  "name": "passport",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build:server": "tsc --project tsconfig.server.json",
+    "build:next": "next build && next export -o micro/out",
+    "build": "npm run build:next && npm run build:server",
+    "start": "cross-env NODE_ENV=production node micro/server.js",
+    "deploy": "deta deploy micro",
+    "lint": "next lint"
+  },
+  "devDependencies": {
+    "@anders-t/ethers-ledger": "^1.0.4",
+    "@cronos-labs/hardhat-cronoscan": "^0.0.4",
+    "@ethersproject/hdnode": "^5.7.0",
+    "@ethersproject/random": "^5.7.0",
+    "@nomicfoundation/hardhat-chai-matchers": "^1.0.3",
+    "@nomicfoundation/hardhat-network-helpers": "^1.0.4",
+    "@nomicfoundation/hardhat-toolbox": "^1.0.2",
+    "@nomiclabs/hardhat-etherscan": "^3.1.0",
+    "@remix-project/remixd": "^0.6.6",
+    "@typechain/ethers-v5": "^10.1.0",
+    "@typechain/hardhat": "^6.1.2",
+    "@types/chai": "^4.3.3",
+    "@types/mocha": "^9.1.1",
+    "@types/node": "^18.7.14",
+    "@types/react": "^18.0.18",
+    "@types/react-dom": "18.0.6",
+    "@types/yamljs": "^0.2.31",
+    "chai": "^4.3.6",
+    "cross-env": "^7.0.3",
+    "dotenv": "^16.0.2",
+    "eslint": "8.23.0",
+    "eslint-config-next": "12.2.5",
+    "hardhat": "^2.10.2",
+    "hardhat-change-network": "^0.0.7",
+    "next": "^12.2.5",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "ts-node": "^10.9.1",
+    "typechain": "^8.1.0",
+    "typescript": "^4.8.2",
+    "yamljs": "^0.3.0"
+  },
+  "dependencies": {
+    "@fastify/static": "^6.5.0",
+    "deta": "^1.1.0",
+    "fastify": "^4.5.3"
+  }
+}
