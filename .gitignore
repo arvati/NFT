@@ -21,3 +21,10 @@ typechain-types
 cache
 artifacts
 
+#Safe Config
+config.yml
+deta
+deta.exe
+.deta/
+dist
+micro/*.js
