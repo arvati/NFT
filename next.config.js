@@ -8,10 +8,8 @@ const nextConfig = {
   httpAgentOptions: {
     keepAlive: false,
   },
-  experimental: {
-    images: {
-      unoptimized: true,
-    },
+  images: {
+    unoptimized: true,
   },
   pageExtensions: ['mdx', 'md', 'jsx', 'js', 'tsx', 'ts'],
   basePath: '',

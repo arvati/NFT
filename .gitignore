@@ -59,8 +59,5 @@ yarn-error.log*
 next-env.d.ts
 
 config.yml
-deta
-deta.exe
-.deta/
 dist
 micro/*.js

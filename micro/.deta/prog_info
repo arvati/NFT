@@ -1,0 +1,1 @@
+{"id":"c64b9c9c-56ca-42d7-b6cf-fa1f8b249666","space":29731,"runtime":"nodejs14.x","name":"metadata","path":"bbdjva","project":"e0xjo69w","account":"144798365827","region":"sa-east-1","deps":["@fastify/static@^6.5.0","deta@^1.1.0","fastify@^4.5.3"],"envs":null,"public":true,"log_level":"off","cron":""}
