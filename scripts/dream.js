@@ -4,11 +4,9 @@ const axios = require('axios');
 require('dotenv').config()
 
 // Styles
-// * 53 = analogue
-// * 47 = line-art
-// * 52 = HDR
-// * 50 = paint
-// * 49 = polygon
+// 'Ukiyoe': 2
+// 'No Style': 3,
+// 'HD': 7,
 
 const styles = {
     'Analogue': 53,
@@ -16,6 +14,10 @@ const styles = {
     'Paint': 50,
     'Polygon': 49,
     'Line-Art': 47,
+    'Cartoonist': 58,
+    'Bad Trip': 57,
+    'Retro-Futurism': 54,
+    'Gouache': 48,
   };
 
 function getRandomProperty(obj, frequency = 1) {
